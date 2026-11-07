@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Price Game — Guess the Price. Play for Points.</title>
+<meta name="description" content="Guess the actual price of random items — houses, celebrity outfits, cars, groceries and ridiculous things. 1v1, 2v2, free-for-all and ranked. Worldwide leaderboard.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<canvas id="bgCanvas" class="bg-canvas"></canvas>
+
+<header class="shell">
+  <div class="shell-inner">
+    <div class="brand">
+      <div class="brand-mark">PG</div>
+      <div class="brand-text">Price <span class="gold">Game</span></div>
+    </div>
+    <nav class="nav">
+      <a href="game.html" class="btn btn-gold">Play Now</a>
+      <a href="#leaderboard" class="btn btn-ghost">Leaderboard</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <span class="badge">Multiplayer • Real-time • Free</span>
+    <h1>Can you guess<br><span class="gold">the actual price</span> of anything?</h1>
+    <p class="hero-lead">Houses. Celebrity outfits. Cars. Groceries. Ridiculous items. One million things. Closest guess wins the points. Climb from Penny Pincher to Retail Royalty.</p>
+    <div class="hero-actions">
+      <a href="game.html" class="btn btn-gold btn-large">Start Playing</a>
+      <a href="#modes" class="btn btn-ghost btn-large">See Modes</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-value">1,000,000+</span><span class="stat-label">items</span></div>
+      <div class="stat"><span class="stat-value">12</span><span class="stat-label">currencies</span></div>
+      <div class="stat"><span class="stat-value">10</span><span class="stat-label">ranks</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="modes" class="modes">
+  <div class="container">
+    <h2 class="section-title">Play with Friends <span class="dot">.</span></h2>
+    <div class="mode-grid">
+      <div class="mode-card">
+        <div class="mode-chip">1v1</div>
+        <h3>Duel</h3>
+        <p>Head-to-head price guessing. Closest to the actual price takes the round.</p>
+      </div>
+      <div class="mode-card">
+        <div class="mode-chip">2v2</div>
+        <h3>Teams</h3>
+        <p>Pair up with a friend. Combined team score decides the winning duo.</p>
+      </div>
+      <div class="mode-card">
+        <div class="mode-chip">FFA</div>
+        <h3>Free-for-All</h3>
+        <p>Up to 8 players. Everyone guesses, the sharpest eye wins.</p>
+      </div>
+      <div class="mode-card locked">
+        <div class="mode-chip">Ranked</div>
+        <h3>Ranked <span class="lock-tag">Coming Soon</span></h3>
+        <p>Climb the tier system from Penny Pincher to Retail Royalty. Season 0 approaching.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="leader-teaser">
+  <div class="container">
+    <h2 class="section-title">Worldwide Leaderboard</h2>
+    <p>Points carry across every match. See where you stand globally and in your country.</p>
+    <a href="game.html" class="btn btn-gold">View Leaderboard</a>
+  </div>
+</section>
+
+<footer class="shell">
+  <div class="shell-inner footer-inner">
+    <div class="brand">
+      <div class="brand-mark">PG</div>
+      <div class="brand-text">Price Game</div>
+    </div>
+    <p class="foot-note">1,000,000 procedurally generated items • Real-time multiplayer via Socket.IO • Higgsfield cinematic animations</p>
+  </div>
+</footer>
+
+<script src="js/bg.js"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+{
+  "provider": "higgsfield",
+  "apiKeyEnv": "HIGGSFIELD_API_KEY",
+  "apiBase": "${HIGGSFIELD_API_BASE}",
+  "model": "higgsfield-video-1",
+  "fallback": "css",
+  "version": "1.0.0",
+  "presets": {
+    "item-reveal": {
+      "prompt": "Cinematic luxury product reveal: a floating golden 3D price tag rotating slowly, dramatic studio lighting, dark slate background, bokeh, 4k, expensive aesthetic, slow camera push in",
+      "duration": 5,
+      "use": "played when each round's mystery item is revealed"
+    },
+    "round-transition": {
+      "prompt": "Luxury countdown transition: gold particles swirling, elegant typography counting down 3 2 1, dark slate and gold theme, cinematic, expensive",
+      "duration": 3,
+      "use": "played between rounds"
+    },
+    "victory": {
+      "prompt": "Victory celebration: gold coins and confetti falling in slow motion, luxury winner announcement, gleaming golden trophy, cinematic, expensive",
+      "duration": 4,
+      "use": "played when a round or match ends"
+    },
+    "leaderboard-intro": {
+      "prompt": "Cinematic leaderboard reveal: golden rankings ascending through a luxury esports arena, dark slate, expensive, 4k",
+      "duration": 4,
+      "use": "played when the worldwide leaderboard opens"
+    }
+  }
+}
