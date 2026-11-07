@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Price Game — Play with Friends</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<canvas id="bgCanvas" class="bg-canvas"></canvas>
+
+<header class="shell">
+  <div class="shell-inner">
+    <a href="index.html" class="brand">
+      <div class="brand-mark">PG</div>
+      <div class="brand-text">Price <span class="gold">Game</span></div>
+    </a>
+    <nav class="nav">
+      <a href="index.html" class="btn btn-ghost">Home</a>
+      <a href="#leaderboard-screen" class="btn btn-ghost" onclick="app.openLeaderboard()">Leaderboard</a>
+      <button id="btnProfile" class="btn btn-ghost" onclick="app.showProfile()">Profile</button>
+    </nav>
+  </div>
+</header>
+
+<div id="app" class="app">
+
+  <!-- ========== LOBBY ========== -->
+  <div class="screen active" id="screen-lobby">
+    <div class="container">
+      <div class="panel-header">
+        <h2 class="panel-title">Lobby <span class="dot"></span></h2>
+        <div class="auth-chip" id="chipUser">Guest <span id="chipName"></span> <span id="chipTier"></span></div>
+      </div>
+
+      <div class="room-actions">
+        <button class="btn btn-gold" onclick="app.createRoom()">Create Room</button>
+        <button class="btn btn-ghost" onclick="app.refreshRooms()">Refresh</button>
+      </div>
+
+      <div class="panel" style="margin-top:1rem;">
+        <h3 class="panel-title" style="font-size:1.1rem;">Active Rooms</h3>
+        <div class="room-list" id="roomList">
+          <div class="empty-msg">No rooms yet. Create one and invite friends!</div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:1rem;">
+        <h3 class="panel-title" style="font-size:1.1rem;">Quick Start</h3>
+        <p class="subtitle">Create a room, choose your match settings, share the room code, and start when everyone has joined.</p>
+        <div class="tier-row" id="tierRow"></div>
+        <div class="ranked-teaser">
+          <strong>Ranked Mode — Coming Soon</strong><br>
+          <span style="font-size:0.85rem;opacity:0.8">Climb from Penny Pincher to Retail Royalty in Season 0.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SETTINGS ========== -->
+  <div class="screen" id="screen-settings">
+    <div class="container">
+      <button class="btn btn-ghost" onclick="app.showLobby()" style="margin-bottom:1rem;">← Back to Lobby</button>
+      <div class="panel-header">
+        <h2 class="panel-title">Match Settings</h2>
+        <div class="auth-chip" id="chipUserS">Host: <span id="chipNameS"></span></div>
+      </div>
+
+      <div class="settings-grid">
+        <div class="field">
+          <label>Game Mode</label>
+          <select id="selMode">
+            <option value="1v1">1v1 — Duel (2 players)</option>
+            <option value="2v2">2v2 — Teams (4 players)</option>
+            <option value="ffa">Free-for-All (up to 8)</option>
+            <option value="ranked" disabled>Ranked — Coming Soon</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Country / Currency</label>
+          <select id="selCountry"></select>
+        </div>
+        <div class="field" style="grid-column: span 2;">
+          <label>Rounds</label>
+          <select id="selRounds">
+            <option value="3">3 Rounds (Quick)</option>
+            <option value="5" selected>5 Rounds (Standard)</option>
+            <option value="7">7 Rounds (Marathon)</option>
+            <option value="10">10 Rounds (Ultra)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="locked-note" id="noteRanked" style="display:none;">
+        Ranked mode is coming in Season 0. It will use the tier system below to match players of similar price-guessing skill.
+      </div>
+
+      <div class="ranked-teaser">
+        <strong>Ranked Tiers (Season 0)</strong>
+        <div class="tier-row" id="tierRowS"></div>
+      </div>
+
+      <div style="display:flex; gap:0.75rem; margin-top:1.5rem;">
+        <button class="btn btn-gold btn-large" id="btnStart" onclick="app.startGame()">Start Game</button>
+        <span class="subtitle" id="startHint" style="align-self:center;">Waiting for players…</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== GAMEPLAY ========== -->
+  <div class="screen" id="screen-gameplay">
+    <div class="container">
+      <div class="top-bar">
+        <div class="round-pill" id="pillRound">Round <span id="txtRound">1</span> / <span id="txtTotal">5</span></div>
+        <div class="timer-ring" id="timerRing"><span id="txtTimer">30</span></div>
+        <div class="auth-chip" id="chipUserG" style="margin-left:auto;">You</div>
+      </div>
+
+      <div class="item-card" id="itemCard">
+        <div class="item-media">
+          <img id="itemImg" src="" alt="Mystery item">
+        </div>
+        <div class="item-body">
+          <div class="item-tag" id="itemTag">🏠 Real Estate</div>
+          <div class="currency-pill" id="itemCurrency"></div>
+          <h3 class="item-name" id="itemName">Loading mystery item…</h3>
+          <p class="item-desc" id="itemDesc"></p>
+        </div>
+        <div class="price-placeholder">
+          <div class="big-q">???</div>
+        </div>
+      </div>
+
+      <div id="gameplayControls">
+        <div class="guess-panel">
+          <input type="text" id="inputGuess" class="guess-input" placeholder="Your guess (e.g. 1,250,000)" autocomplete="off">
+          <div class="guess-actions">
+            <button class="btn btn-gold" id="btnGuess" onclick="app.submitGuess()">Guess</button>
+          </div>
+        </div>
+        <div class="my-guess-chip" id="chipMyGuess">
+          <span id="txtMyGuess">Your guess: —</span>
+        </div>
+        <div class="guess-list" id="guessList"></div>
+        <p class="subtitle" id="txtWaiting" style="text-align:center;color:var(--muted);">Waiting for other players to guess…</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== ROUND RESULTS ========== -->
+  <div class="screen" id="screen-roundresults">
+    <div class="container">
+      <div class="panel-header">
+        <h2 class="panel-title">Round <span id="rrRound">1</span> Results</h2>
+      </div>
+      <div class="reveal-band">
+        <div>
+          <div class="subtitle">Actual price</div>
+          <div class="actual-price-big" id="rrActual">—</div>
+        </div>
+      </div>
+      <div class="results-table" id="rrTable"></div>
+      <div style="margin-top:1rem;">
+        <button class="btn btn-gold" onclick="app.continueGame()">Next Round</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== GAME OVER ========== -->
+  <div class="screen" id="screen-gameover">
+    <div class="container">
+      <div class="gameover-band">
+        <h2 id="goHeadline">Match Complete</h2>
+        <p id="goSub" class="subtitle">Points awarded based on how close you were.</p>
+      </div>
+      <div class="final-table" id="goTable"></div>
+      <div class="tier-row" id="goNewTier" style="margin-top:1rem;"></div>
+      <div style="margin-top:1.25rem; display:flex; gap:0.75rem;">
+        <button class="btn btn-gold btn-large" onclick="app.rematch()">Play Again</button>
+        <button class="btn btn-ghost" onclick="app.showLobby()">Back to Lobby</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== LEADERBOARD ========== -->
+  <div class="screen" id="screen-leaderboard">
+    <div class="container">
+      <button class="btn btn-ghost" onclick="app.showLobby()" style="margin-bottom:1rem;">← Back</button>
+      <div class="panel-header">
+        <h2 class="panel-title">Worldwide Leaderboard</h2>
+        <select id="selLbCountry" style="margin-left:auto;padding:0.5rem;border-radius:8px;border:1px solid var(--panel-border);background:rgba(0,0,0,0.3);color:var(--ink);">
+          <option value="">All Countries</option>
+        </select>
+      </div>
+      <div class="lb-header">
+        <div>#</div><div>Player</div><div>Points</div><div>Games</div><div>Wins</div>
+      </div>
+      <div class="leaderboard-table" id="lbTable"></div>
+      <div class="tiers-grid" id="lbTiers"></div>
+    </div>
+  </div>
+
+  <!-- profile toast -->
+  <div class="panel hidden" id="panel-profile" style="position:fixed;inset:1rem 1rem auto 1rem;z-index:60;max-width:420px;">
+    <div class="panel-header"><h2 class="panel-title">Profile</h2><button class="btn btn-ghost" onclick="app.hideProfile()">✕</button></div>
+    <div class="auth-chip" id="profChip">—</div>
+    <div class="sub" style="margin-top:1rem;">Points: <span id="profPoints">0</span> · Games: <span id="profGames">0</span> · Wins: <span id="profWins">0</span></div>
+  </div>
+
+  <canvas class="confetti" id="confetti"></canvas>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="js/higgsfield.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>
